@@ -1,0 +1,27 @@
+Programação assíncrona em JavaScript
+
+O JavaScript executa o seu código em uma única thread. Isso significa que apenas uma instrução é processada por vez. Mesmo assim, uma página consegue buscar dados na rede, responder a cliques e animar elementos ao mesmo tempo. Quem torna isso possível é o event loop, junto com a fila de tarefas e as APIs do ambiente, como o navegador ou o Node.
+
+O event loop é o mecanismo que observa a call stack e a fila de tarefas. Quando a call stack fica vazia, o event loop pega a próxima tarefa da fila de tarefas e a coloca na call stack para execução. A call stack é a pilha onde ficam as funções que estão sendo executadas naquele momento. Se uma função demora muito na call stack, ela bloqueia a thread e a interface congela.
+
+Por isso operações lentas, como uma requisição HTTP ou a leitura de um arquivo, não devem bloquear a call stack. Essas operações são entregues para as APIs do ambiente, que trabalham fora da thread principal. Quando terminam, elas colocam um callback na fila de tarefas. O callback é uma função passada como argumento para ser chamada depois, quando o resultado estiver pronto.
+
+Callbacks funcionam, mas quando várias operações dependem umas das outras surge o chamado callback hell. O callback hell é o aninhamento profundo de callbacks, que deixa o código difícil de ler e de tratar erros. Para resolver esse problema, o JavaScript ganhou a Promise.
+
+Uma Promise é um objeto que representa um valor que pode estar disponível agora, no futuro ou nunca. Toda Promise tem três estados: pending, fulfilled e rejected. No estado pending a operação ainda não terminou. No estado fulfilled a operação terminou com sucesso e a Promise tem um valor. No estado rejected a operação falhou e a Promise guarda o motivo do erro.
+
+Para consumir uma Promise usamos o método then, que recebe uma função chamada quando a Promise é resolvida. Para tratar falhas usamos o método catch. Como then também devolve uma Promise, é possível encadear chamadas, formando uma cadeia de Promises. Esse encadeamento resolve boa parte do callback hell, porque o código fica linear em vez de aninhado.
+
+As Promises não vão para a mesma fila dos callbacks comuns. Elas usam a fila de microtasks, que tem prioridade maior que a fila de tarefas. Sempre que a call stack esvazia, o event loop executa todas as microtasks pendentes antes de pegar a próxima tarefa da fila de tarefas. Por isso um then registrado agora roda antes de um setTimeout com zero milissegundos.
+
+Depois vieram as palavras-chave async e await, que são uma forma mais legível de trabalhar com Promises. Uma função async sempre retorna uma Promise. Dentro dela, o await pausa a execução da função até a Promise ser resolvida, sem bloquear a thread. Enquanto a função async espera, o event loop continua livre para processar outras tarefas.
+
+O tratamento de erros com async e await usa try e catch, como em código síncrono. Se a Promise aguardada for rejeitada, o await lança o erro, e o bloco catch captura esse erro. Esquecer o try e catch é um erro comum, porque a rejeição não tratada pode derrubar o processo no Node.
+
+Quando várias operações são independentes, não faz sentido esperar uma de cada vez. O método Promise.all recebe uma lista de Promises e devolve uma única Promise que é resolvida quando todas terminam. Assim as requisições acontecem em paralelo e o tempo total cai bastante. O cuidado é que Promise.all é rejeitada assim que qualquer uma das Promises falha. Quando você precisa do resultado de todas, mesmo das que falharam, o Promise.allSettled é a escolha mais segura.
+
+Um exemplo prático: imagine uma tela que mostra o perfil do usuário e os pedidos dele. Com await em sequência, a tela espera o perfil e só depois começa a buscar os pedidos. Com Promise.all, as duas requisições saem ao mesmo tempo. O código fica assim: const [perfil, pedidos] = await Promise.all([buscarPerfil(id), buscarPedidos(id)]).
+
+Também é importante entender que async e await não deixam o código mais rápido sozinhos. Eles apenas organizam a espera. O ganho real vem de não bloquear a call stack e de disparar operações independentes em paralelo com Promise.all.
+
+Resumindo: o event loop coordena a call stack, a fila de tarefas e a fila de microtasks. Callbacks foram a primeira solução para código assíncrono, mas levaram ao callback hell. A Promise trouxe estados claros e encadeamento com then e catch. Por fim, async e await deixaram tudo mais legível, com try e catch para erros e Promise.all para paralelismo.

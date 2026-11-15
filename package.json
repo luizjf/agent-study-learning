@@ -1,0 +1,43 @@
+{
+  "name": "trilha",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Estude um vídeo, PDF ou texto: agentes de IA estudam o conteúdo e escrevem uma prova (75% para passar) com mapa de conhecimento. / Study a video, PDF or text: AI agents study the content and write a quiz (75% to pass) with a knowledge map.",
+  "license": "ISC",
+  "type": "module",
+  "main": "server/index.js",
+  "engines": {
+    "node": ">=22.5"
+  },
+  "scripts": {
+    "start": "node server/index.js",
+    "start:pro": "node server/index.js --llm=claude-code",
+    "dev": "node --watch server/index.js",
+    "test": "node --test \"tests/*.test.js\"",
+    "loadtest": "node scripts/loadtest.js"
+  },
+  "keywords": [
+    "ai-agents",
+    "llm",
+    "claude",
+    "education",
+    "quiz",
+    "rag",
+    "knowledge-graph",
+    "adhd",
+    "sqlite",
+    "express"
+  ],
+  "author": "",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.8.0",
+    "@fontsource-variable/fraunces": "^5.3.0",
+    "@fontsource/atkinson-hyperlegible": "^5.3.0",
+    "@fontsource/jetbrains-mono": "^5.3.0",
+    "express": "^5.3.0",
+    "unpdf": "^2.2.0"
+  },
+  "devDependencies": {
+    "playwright-core": "^1.65.1"
+  }
+}

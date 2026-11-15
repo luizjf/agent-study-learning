@@ -1,0 +1,22 @@
+# dependências e builds
+node_modules/
+coverage/
+
+# dados locais: o banco guarda estudos, provas e anotações dos usuários (nunca versionar)
+data/
+*.db
+*.db-wal
+*.db-shm
+
+# saídas de teste
+ui-shots/
+*.log
+
+# segredos e configurações locais
+.env
+.env.*
+.claude/settings.local.json
+
+# sistema
+.DS_Store
+Thumbs.db
